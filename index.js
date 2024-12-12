@@ -8,9 +8,6 @@ const port = process.env.PORT || 3000
 app.use(cors())
 app.use(express.json())
 
-// jobportal
-// 4hbrtcFGKbVvr1SF
-
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6avkk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -25,14 +22,23 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // // Connect the client to the server	(optional starting in v4.7)
+    // await client.connect();
+    // // Send a ping to confirm a successful connection
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    // job related apis
+    const jobsCollection = client.db('job_portal').collection('jobs')
+
+    app.get('/jobs', async (req, res)=>{
+        const cursor = jobsCollection.find()
+        const result = await cursor.toArray()
+        res.send(result)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
