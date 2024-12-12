@@ -21,14 +21,10 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
-    // // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
-    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
     // job related apis
     const jobsCollection = client.db("job_portal").collection("jobs");
+    const jobApplicationCollection = client.db('job_portal').collection('job_applications')
 
     // get data for display data
     app.get("/jobs", async (req, res) => {
@@ -44,6 +40,12 @@ async function run() {
       res.send(result);
     });
 
+    // post for job application
+    app.post('/job-applications', async(req, res)=>{
+      const application = req.body;
+      const result = await jobApplicationCollection.insertOne(application)
+      res.send(result)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
