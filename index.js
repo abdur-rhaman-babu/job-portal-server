@@ -23,6 +23,7 @@ async function run() {
   try {
     // job related apis
     const jobsCollection = client.db("job_portal").collection("jobs");
+    const applicationCollection = client.db('job_portal').collection('job_applications')
     
     // get data from server for display
     app.get('/jobs', async (req, res)=>{
@@ -37,6 +38,11 @@ async function run() {
       res.send(result)
     })
 
+    app.post('/job-applications', async (req, res)=>{
+        const application = req.body;
+        const result = await applicationCollection.insertOne(application)
+        res.send(result)
+    })
    
   } finally {
    
