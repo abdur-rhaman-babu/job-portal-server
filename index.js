@@ -48,6 +48,17 @@ async function run() {
       const email = req.query.email;
       const query = {application_email: email}
       const result = await applicationCollection.find(query).toArray()
+
+      // get data to another collection fokira way
+      for(const application of result){
+        console.log(application.job_id)
+        const query1 = {_id: new ObjectId(application.job_id)}
+        const job = await jobsCollection.findOne(query1)
+        if(job){
+          application.title = job.title;
+          application.company = job.company
+        }
+      }
       res.send(result)
     })
    
