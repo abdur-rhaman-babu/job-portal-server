@@ -62,6 +62,19 @@ async function run() {
         res.send(result)
     })
 
+    app.patch('/job-applications/:id', async (req, res)=>{
+        const id = req.params.id;
+        const data = req.body;
+        const filter = {_id: new ObjectId(id)}
+        const updatedDoc = {
+          $set:{
+            status: data.status
+          }
+        }
+        const result = await applicationCollection.updateOne(filter, updatedDoc)
+        res.send(result)
+    })
+
     // get data to spacific email
     app.get('/job-application', async (req, res)=>{
       const email = req.query.email;
