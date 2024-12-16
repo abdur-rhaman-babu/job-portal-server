@@ -7,7 +7,10 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true 
+}));
 app.use(express.json());
 app.use(cookieParser())
 
@@ -93,6 +96,7 @@ async function run() {
     app.get('/job-application', async (req, res)=>{
       const email = req.query.email;
       const query = {application_email: email}
+      console.log('kuk kuk',req.cookies)
       const result = await applicationCollection.find(query).toArray()
 
       // get data to another collection fokira way
