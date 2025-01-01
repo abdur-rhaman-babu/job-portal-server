@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const verifyToken = (req, res, next) => {
-  console.log("Inside the verify token middleware");
+  
   const token = req?.cookies?.token
   if(!token){
     return res.status(401).send({message: 'Unauthorized access'})
@@ -73,11 +73,23 @@ async function run() {
 
     app.get("/jobs", async (req, res) => {
       const email = req.query.email;
+      const sort = req.query?.sort;
+      const search = req.query?.search;
       let query = {};
+      let sortQuery = {}
+
       if (email) {
         query = { hr_email: email };
       }
-      const result = await jobsCollection.find(query).toArray();
+
+      if(search){
+        query.location = {$regex:search, $options: 'i'}
+      }
+
+      if(sort === 'true'){
+        sortQuery= {'salaryRange.min': -1}
+      }
+      const result = await jobsCollection.find(query).sort(sortQuery).toArray();
       res.send(result);
     });
 
